@@ -131,6 +131,11 @@
     return url ? externalLink("Смотреть", url, className) : null;
   }
   function trailerButton(item, className = "button secondary") {
+    if (vkTrailerEmbedUrl(item.trailer) && (
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.matchMedia("(max-width: 600px)").matches
+    ))
+      return externalLink("Трейлер ↗", item.trailer, className);
     if (trailerEmbedUrl(item.trailer) || vkTrailerEmbedUrl(item.trailer))
       return button(
         "Трейлер",
