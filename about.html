@@ -1,0 +1,171 @@
+<!-- Этот файл создаёт страницу «О проекте» и подключает общие данные и функции. -->
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="О проекте. Выбирайте истории и удобную платформу просмотра."
+    />
+    <meta name="theme-color" content="#0b0b12" />
+    <link rel="icon" type="image/svg+xml" href="kinofun-favicon.svg" />
+    <title>О проекте — KinoFun</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="effects.js" defer></script>
+  </head>
+  <body data-page="about">
+    <script>
+      try {
+        document.body.dataset.theme =
+          localStorage.getItem("ks-theme") === "light" ? "light" : "dark";
+      } catch {
+        document.body.dataset.theme = "dark";
+      }
+    </script>
+    <a class="skip-link" href="#main">К содержимому</a
+    ><canvas id="sky" aria-hidden="true"></canvas>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="reading-progress" aria-hidden="true"></div>
+    <header class="header" id="top">
+      <a
+        class="logo"
+        href="#"
+        data-contact="vk"
+        aria-label="КиноФан KinoFun — открыть канал ВКонтакте"
+        ><img class="logo-image" src="kinofun-favicon.svg" alt="" aria-hidden="true" /><span
+          >KinoFun<small>КиноФан</small></span></a
+      ><button
+        class="burger icon"
+        type="button"
+        aria-label="Открыть меню"
+        aria-controls="navigation"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+      <nav id="navigation" aria-label="Основное меню">
+        <a href="index.html">Главное</a><a href="index.html#catalog">Каталог</a
+        ><a href="cartoons.html">Мультфильмы</a
+        ><a href="index.html#new">Новинки <i></i></a
+        ><a href="about.html">О проекте</a><a href="faq.html">FAQ</a
+        ><a href="support.html">Поддержка</a>
+      </nav>
+      <div class="header-actions">
+        <button
+          class="icon theme"
+          type="button"
+          aria-label="Переключить тему"
+          aria-pressed="false"
+        >
+          ◐</button
+        ><a class="mini-social" href="#" data-contact="vk">VK ↗</a>
+      </div>
+    </header>
+    <main id="main">
+      <section class="section">
+        <p class="eyebrow">БОЛЬШЕ, ЧЕМ КАТАЛОГ</p>
+        <h1>Истории <em>объединяют.</em></h1>
+        <p class="lead" id="site-story"></p>
+        <div class="stats-panel glass reveal">
+          <div>
+            <strong data-count="materials">0</strong
+            ><span>историй в каталоге</span>
+          </div>
+          <div>
+            <strong data-count="subscribers">0</strong
+            ><span>подписчиков в сообществе VK</span>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <p class="eyebrow">НАША ИСТОРИЯ</p>
+        <h2>От идеи <em>к сообществу</em></h2>
+        <div id="timeline" class="timeline"></div>
+      </section>
+      <section class="section">
+        <p class="eyebrow">ПО ТУ СТОРОНУ ЭКРАНА</p>
+        <h2>Знакомьтесь: <em>ваша команда</em></h2>
+        <div class="steps">
+          <article class="glass reveal">
+            <span>◈</span>
+            <h3>Автор канала</h3>
+            <p>
+              Мне 18 лет, я живу в России и увлекаюсь программированием. КиноФан
+              — мой самостоятельный проект: я развиваю сайт, наполняю каталог
+              и стараюсь сделать выбор фильма простым и приятным.
+            </p>
+          </article>
+          <article class="glass reveal">
+            <span>✦</span>
+            <h3>Редактор подборок</h3>
+            <p>
+              Подборки я тоже составляю сам: ищу интересные фильмы и
+              мультфильмы, готовлю описания, добавляю постеры, трейлеры и
+              проверяю ссылки, чтобы зрителям было легче выбрать.
+            </p>
+          </article>
+          <article class="glass reveal">
+            <span>♡</span>
+            <h3>Наши зрители</h3>
+            <p>
+              Вы помогаете КиноФан становиться лучше: смотрите, обсуждаете,
+              делитесь впечатлениями и подсказываете, что добавить в каталог.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="section narrow">
+        <p class="eyebrow">НАШИ ДОГОВОРЁННОСТИ</p>
+        <h2>Вместе <em>комфортнее</em></h2>
+        <div class="glass">
+          <p>01. Уважайте других участников и их мнение.</p>
+          <p>02. Предупреждайте о спойлерах.</p>
+          <p>03. Делитесь только разрешёнными ссылками.</p>
+          <p>04. Сообщайте автору о неработающих материалах.</p>
+        </div>
+        <a class="button primary" href="#" data-contact="vkChat"
+          >Присоединиться к разговору</a
+        >
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer-top">
+        <a class="logo" href="#" data-contact="vk"
+          ><img class="logo-image" src="kinofun-favicon.svg" alt="" aria-hidden="true" /><span
+            >KinoFun<small>КиноФан</small></span></a
+        >
+        <p>Хорошие истории становятся ближе.</p>
+        <div>
+          <a href="about.html">О проекте</a><a href="faq.html">Вопросы</a
+          ><a href="support.html">Поддержка</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year></span> <span data-site-name></span></span
+        ><span>Ссылки ведут только на разрешённые источники.</span>
+      </div>
+    </footer>
+    <a class="back-top icon" href="#" aria-label="Наверх">↑</a>
+    <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+    <dialog id="modal" aria-labelledby="modal-title">
+      <div class="modal-shell">
+        <button
+          type="button"
+          class="icon close-modal"
+          aria-label="Закрыть окно"
+        >
+          ×
+        </button>
+        <div id="modal-body"></div>
+      </div>
+    </dialog>
+    <noscript
+      ><p>
+        Для работы каталога включите JavaScript в настройках браузера.
+      </p></noscript
+    >
+  </body>
+</html>

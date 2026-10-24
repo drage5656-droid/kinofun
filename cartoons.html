@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Каталог мультфильмов: сюжеты, подробности, постеры и трейлеры."
+    />
+    <meta name="theme-color" content="#0b0b12" />
+    <link rel="icon" type="image/svg+xml" href="kinofun-favicon.svg" />
+    <title>Мультфильмы — KinoFun</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="effects.js" defer></script>
+  </head>
+  <body data-page="cartoons" data-catalog-type="animation">
+    <script>
+      try {
+        document.body.dataset.theme =
+          localStorage.getItem("ks-theme") === "light" ? "light" : "dark";
+      } catch {
+        document.body.dataset.theme = "dark";
+      }
+    </script>
+    <a class="skip-link" href="#main">К содержимому</a>
+    <header class="header" id="top">
+      <a
+        class="logo"
+        href="#"
+        data-contact="vk"
+        aria-label="КиноФан KinoFun — открыть канал ВКонтакте"
+        ><img class="logo-image" src="kinofun-favicon.svg" alt="" aria-hidden="true" /><span
+          >KinoFun<small>КиноФан</small></span
+      ></a>
+      <button
+        class="burger icon"
+        type="button"
+        aria-label="Открыть меню"
+        aria-controls="navigation"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+      <nav id="navigation" aria-label="Основное меню">
+        <a href="index.html">Главное</a><a href="index.html#catalog">Каталог</a
+        ><a href="cartoons.html">Мультфильмы</a
+        ><a href="index.html#new">Новинки <i></i></a
+        ><a href="about.html">О проекте</a><a href="faq.html">FAQ</a
+        ><a href="support.html">Поддержка</a>
+      </nav>
+      <div class="header-actions">
+        <button
+          class="icon theme"
+          type="button"
+          aria-label="Переключить тему"
+          aria-pressed="false"
+        >
+          ◐</button
+        ><a class="mini-social" href="#" data-contact="vk">VK ↗</a>
+      </div>
+    </header>
+    <main id="main">
+      <section class="section" id="catalog">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">МИРЫ, ГДЕ ВОЗМОЖНО ВСЁ</p>
+            <h1>Каталог <em>мультфильмов</em></h1>
+            <p class="muted">
+              Ищите мультфильм, изучайте подробности и открывайте его страницу.
+            </p>
+          </div>
+          <a class="button secondary" href="index.html#catalog"
+            >← Весь каталог</a
+          >
+        </div>
+        <div class="catalog-tools">
+          <div class="search-wrap">
+            <label class="sr-only" for="search">Найти мультфильм</label>
+            <input
+              id="search"
+              type="search"
+              placeholder="Название мультфильма…"
+              role="combobox"
+              aria-expanded="false"
+              aria-controls="suggestions"
+              aria-autocomplete="list"
+              autocomplete="off"
+            />
+            <ul id="suggestions" role="listbox" hidden></ul>
+          </div>
+          <label class="sort"
+            ><span class="sr-only">Сортировка</span
+            ><select id="sort">
+              <option value="new">Сначала новинки</option>
+              <option value="year">По году выпуска</option>
+              <option value="title">По названию</option>
+            </select></label
+          >
+        </div>
+        <div class="filters" role="group" aria-label="Тип материала">
+          <button
+            type="button"
+            data-type="animation"
+            class="active"
+            aria-pressed="true"
+          >
+            Все мультфильмы
+          </button>
+        </div>
+        <div class="genres" id="genres" role="group" aria-label="Жанры"></div>
+        <p id="results" class="muted" aria-live="polite"></p>
+        <div id="catalog-grid" class="cards"></div>
+        <div id="empty" class="empty" hidden>
+          <h2>Мультфильм пока не нашёлся</h2>
+          <p>Попробуйте другое название или сбросьте фильтры.</p>
+          <button type="button" class="button secondary" id="reset">
+            Сбросить фильтры
+          </button>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer-top">
+        <a class="logo" href="#" data-contact="vk"
+          ><img class="logo-image" src="kinofun-favicon.svg" alt="" aria-hidden="true" /><span
+            >KinoFun<small>КиноФан</small></span
+        ></a>
+        <p>Хорошие истории становятся ближе.</p>
+        <div>
+          <a href="index.html#catalog">Каталог</a
+          ><a href="about.html">О проекте</a><a href="faq.html">Вопросы</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year></span> <span data-site-name></span></span
+        ><span>Ссылки ведут только на разрешённые источники.</span>
+      </div>
+    </footer>
+    <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+    <dialog id="modal" aria-labelledby="modal-title">
+      <div class="modal-shell">
+        <button class="icon close-modal" type="button" aria-label="Закрыть">
+          ×
+        </button>
+        <div id="modal-body"></div>
+      </div>
+    </dialog>
+  </body>
+</html>

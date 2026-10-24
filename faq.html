@@ -1,0 +1,235 @@
+<!-- Этот файл создаёт страницу «Частые вопросы» и подключает общие данные и функции. -->
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Частые вопросы о каталоге и просмотре фильмов."
+    />
+    <meta name="theme-color" content="#0b0b12" />
+    <link rel="icon" type="image/svg+xml" href="kinofun-favicon.svg" />
+    <title>Частые вопросы — KinoFun</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
+    <script src="effects.js" defer></script>
+  </head>
+  <body data-page="faq">
+    <script>
+      try {
+        document.body.dataset.theme =
+          localStorage.getItem("ks-theme") === "light" ? "light" : "dark";
+      } catch {
+        document.body.dataset.theme = "dark";
+      }
+    </script>
+    <a class="skip-link" href="#main">К содержимому</a
+    ><canvas id="sky" aria-hidden="true"></canvas>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="reading-progress" aria-hidden="true"></div>
+    <header class="header" id="top">
+      <a
+        class="logo"
+        href="#"
+        data-contact="vk"
+        aria-label="КиноФан KinoFun — открыть канал ВКонтакте"
+        ><img class="logo-image" src="kinofun-favicon.svg" alt="" aria-hidden="true" /><span
+          >KinoFun<small>КиноФан</small></span></a
+      ><button
+        class="burger icon"
+        type="button"
+        aria-label="Открыть меню"
+        aria-controls="navigation"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+      <nav id="navigation" aria-label="Основное меню">
+        <a href="index.html">Главное</a><a href="index.html#catalog">Каталог</a
+        ><a href="cartoons.html">Мультфильмы</a
+        ><a href="index.html#new">Новинки <i></i></a
+        ><a href="about.html">О проекте</a><a href="faq.html">FAQ</a
+        ><a href="support.html">Поддержка</a>
+      </nav>
+      <div class="header-actions">
+        <button
+          class="icon theme"
+          type="button"
+          aria-label="Переключить тему"
+          aria-pressed="false"
+        >
+          ◐</button
+        ><a class="mini-social" href="#" data-contact="vk">VK ↗</a>
+      </div>
+    </header>
+    <main id="main">
+      <section class="section narrow">
+        <p class="eyebrow">ВСЁ ПОНЯТНО</p>
+        <h1>Есть <em>вопрос?</em></h1>
+        <p class="lead">
+          Здесь собраны ответы, которые помогут быстрее начать просмотр.
+        </p>
+        <label for="faq-search">Поиск по вопросам</label
+        ><input
+          id="faq-search"
+          type="search"
+          placeholder="Например: фильм или ссылка"
+        />
+        <div class="faq-list">
+          <details class="faq-item reveal">
+            <summary>Как найти нужный фильм?</summary>
+            <div class="answer">
+              <p>
+                Введите название в поиске каталога. Можно также выбрать тип
+                материала и один или несколько жанров.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Как перейти к просмотру?</summary>
+            <div class="answer">
+              <p>
+                Откройте карточку и нажмите «Смотреть». Видео откроется на
+                ВКонтакте, если для фильма добавлена ссылка.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Как посмотреть трейлер?</summary>
+            <div class="answer">
+              <p>
+                Если для фильма добавлена ссылка на трейлер YouTube, нажмите
+                «Трейлер» — он откроется во встроенном окне сайта.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Что делать, если ссылка не работает?</summary>
+            <div class="answer">
+              <p>
+                Сообщите автору название материала и что именно не работает
+                через страницу поддержки.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Почему не открывается видео?</summary>
+            <div class="answer">
+              <p>
+                Проверьте интернет и доступность видео ВКонтакте. Иногда для
+                просмотра нужно войти в аккаунт.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Как связаться с автором?</summary>
+            <div class="answer">
+              <p>
+                На странице поддержки размещаются контакты MAX, Telegram и
+                WhatsApp. Если контакт пустой, владелец ещё не добавил его.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Можно ли предложить материал?</summary>
+            <div class="answer">
+              <p>
+                Да. Отправьте название и предложение автору через доступный
+                мессенджер.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Где публикуются новости?</summary>
+            <div class="answer">
+              <p>
+                В сообществе ВКонтакте. Кнопка перехода находится в шапке
+                сайта.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Как сообщить об ошибке?</summary>
+            <div class="answer">
+              <p>
+                Напишите в поддержку: укажите название, описание ошибки и
+                платформу. Никому не отправляйте пароли и коды входа.
+              </p>
+              <button type="button" class="text-link copy-answer">
+                Скопировать ответ ↗
+              </button>
+            </div>
+          </details>
+        </div>
+        <p id="faq-empty" hidden>
+          Ничего не найдено. Попробуйте другой запрос.
+        </p>
+        <a class="button primary" href="support.html"
+          >Связаться с поддержкой ↗</a
+        >
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer-top">
+        <a class="logo" href="#" data-contact="vk"
+          ><img class="logo-image" src="kinofun-favicon.svg" alt="" aria-hidden="true" /><span
+            >KinoFun<small>КиноФан</small></span></a
+        >
+        <p>Хорошие истории становятся ближе.</p>
+        <div>
+          <a href="about.html">О проекте</a><a href="faq.html">Вопросы</a
+          ><a href="support.html">Поддержка</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year></span> <span data-site-name></span></span
+        ><span>Ссылки ведут только на разрешённые источники.</span>
+      </div>
+    </footer>
+    <a class="back-top icon" href="#" aria-label="Наверх">↑</a>
+    <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+    <dialog id="modal" aria-labelledby="modal-title">
+      <div class="modal-shell">
+        <button
+          type="button"
+          class="icon close-modal"
+          aria-label="Закрыть окно"
+        >
+          ×
+        </button>
+        <div id="modal-body"></div>
+      </div>
+    </dialog>
+    <noscript
+      ><p>
+        Для работы каталога включите JavaScript в настройках браузера.
+      </p></noscript
+    >
+  </body>
+</html>

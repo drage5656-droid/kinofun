@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../ПРИЕКТ"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "кино"
+	}
+}
