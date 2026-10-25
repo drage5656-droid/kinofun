@@ -4,10 +4,11 @@ year — год; genre — жанр; age — возраст; description — о�
 palette — цвет заглушки; team.director/cast — команда; details — дополнительные сведения о фильме;
 links.vk — ссылка для просмотра; isNew — метка новинки.
 Чтобы добавить карточку, скопируйте объект из ITEMS и задайте новый id. */
-const SITE = {
+export const SITE = {
   name: "KinoFun — КиноФан",
   tagline: "У каждого вечера есть своя история.", // Замените описанием.
-  stats: { materials: 21, subscribers: 195 },
+  stats: { materials: 21 },
+  vkGroupId: 242325248,
   story:
     "Хороший вечер часто начинается с вопроса: что посмотреть? Так появился КиноФан — место, где можно быстро найти фильм или мультфильм, посмотреть трейлер и выбрать историю для настроения. А после титров — поделиться впечатлениями с другими зрителями.",
   milestones: [
@@ -28,14 +29,14 @@ const SITE = {
     },
   ],
 };
-const CONTACTS = {
+export const CONTACTS = {
   telegram: "https://t.me/Kin0Fun",
   vk: "https://vk.ru/club242325248",
   vkChat: "https://vk.me/join/M5IS8SGfG2/cATtoODlwbNpf5S/pVCYjnYw=",
   max: "https://max.ru/u/f9LHodD0cOLq4XfYP6EPpvhD0qnzUuQ-U_fDqQnU0V-pNrGr9wqOYtI9jjE",
   whatsapp: "",
 };
-const ITEMS = [
+export const ITEMS = [
   {
     id: "how-to-make-a-killing",
     title: "Наследник",
@@ -71,7 +72,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-9355855_456239473",
+    trailer: "https://vkvideo.ru/video-242325248_456239152",
     isNew: true,
   },
   {
@@ -109,7 +110,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-31575153_456245579",
+    trailer: "https://vkvideo.ru/video-242325248_456239151",
     isNew: true,
   },
   {
@@ -143,7 +144,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-31575153_456245844",
+    trailer: "https://vkvideo.ru/video-242325248_456239150",
     isNew: true,
   },
   {
@@ -177,7 +178,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-31575153_456245830",
+    trailer: "https://vkvideo.ru/video-242325248_456239135",
     isNew: false,
   },
   {
@@ -211,7 +212,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-227224074_456239394",
+    trailer: "https://vkvideo.ru/video-242325248_456239149",
     isNew: true,
   },
   {
@@ -240,7 +241,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-222636001_456241308",
+    trailer: "https://vkvideo.ru/video-242325248_456239148",
     isNew: true,
   },
   {
@@ -275,7 +276,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-219105850_456250721",
+    trailer: "https://vkvideo.ru/video-242325248_456239147",
     isNew: true,
   },
 
@@ -312,7 +313,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-227596514_456242639",
+    trailer: "https://vkvideo.ru/video-242325248_456239146",
     isNew: true,
   },
 
@@ -349,7 +350,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-31575153_456245914",
+    trailer: "https://vkvideo.ru/video-242325248_456239137",
     isNew: true,
   },
 
@@ -386,7 +387,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-31575153_456245914",
+    trailer: "https://vkvideo.ru/video-242325248_456239145",
     isNew: true,
   },
   {
@@ -424,7 +425,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-29218811_456249169",
+    trailer: "https://vkvideo.ru/video-242325248_456239144",
     isNew: true,
   },
   {
@@ -460,7 +461,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-227596514_456243337",
+    trailer: "https://vkvideo.ru/video-242325248_456239142",
     isNew: true,
   },
   {
@@ -495,7 +496,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-224594873_456239425",
+    trailer: "",
     isNew: false,
   },
   {
@@ -533,7 +534,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-36249612_456245127",
+    trailer: "https://vkvideo.ru/video-242325248_456239134",
     isNew: false,
   },
   {
@@ -569,7 +570,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-226970548_456240465",
+    trailer: "https://vkvideo.ru/video-242325248_456239143",
     isNew: true,
   },
   {
@@ -604,7 +605,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-85484984_456246887",
+    trailer: "https://vkvideo.ru/video-242325248_456239141",
     isNew: true,
   },
   {
@@ -636,7 +637,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-76240253_456248679",
+    trailer: "https://vkvideo.ru/video-242325248_456239140",
     isNew: true,
   },
   {
@@ -673,7 +674,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-236650512_456239137",
+    trailer: "",
     isNew: true,
   },
   {
@@ -707,7 +708,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-159157918_456241978",
+    trailer: "https://vkvideo.ru/video-242325248_456239138",
     isNew: true,
   },
   {
@@ -744,7 +745,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-24806617_456242542",
+    trailer: "https://vkvideo.ru/video-242325248_456239136",
     isNew: true,
   },
   {
@@ -778,7 +779,7 @@ const ITEMS = [
       whatsapp: "",
       other: "",
     },
-    trailer: "https://vkvideo.ru/video-31575153_456245685",
+    trailer: "https://vkvideo.ru/video-242325248_456239139",
     isNew: true,
   },
 ];
