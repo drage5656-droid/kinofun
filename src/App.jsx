@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { CONTACTS, ITEMS, SITE } from "../data.js";
 import { getSeoMetadata } from "./seo.js";
 
-const BASE_URL = "https://kinofun.ru";
+const BASE_URL = "https://kinofun.onrender.com";
+const FAVORITES_KEY = "cinepix-favorites";
 const paletteNames = ["violet", "gold", "blue", "green", "pink", "orange"];
 const navigation = [
   ["Главная", "/"],
@@ -53,6 +54,14 @@ function imageUrl(value) {
   return typeof value === "string" && /^data:image\/(png|jpe?g|webp|gif);base64,/i.test(value)
     ? value
     : safeUrl(value);
+}
+
+function highResolutionPosterUrl(value) {
+  if (typeof value !== "string") return "";
+  return value.replace(
+    /^https:\/\/image\.tmdb\.org\/t\/p\/w\d+\//,
+    "https://image.tmdb.org/t/p/w1280/",
+  );
 }
 
 function vkTrailerEmbedUrl(value) {
@@ -180,13 +189,12 @@ function SkyCanvas() {
   return <canvas id="sky" ref={canvasRef} aria-hidden="true" />;
 }
 
-function Header({ page, theme, onToggleTheme }) {
+function Header({ page, theme, onToggleTheme, favoritesCount, onShowFavorites }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <header className="header" id="top">
-      <a className="logo" href={CONTACTS.vk} target="_blank" rel="noopener noreferrer" aria-label="KinoFun — открыть сообщество ВКонтакте">
-        <img className="logo-image" src="/kinofun-favicon.svg" alt="" />
-        <span>KinoFun<small>КиноФан</small></span>
+      <a className="logo" href={CONTACTS.vk} target="_blank" rel="noopener noreferrer" aria-label="CinePix — открыть сообщество ВКонтакте">
+        <img className="logo-image" src="/cinepix-wordmark.png" alt="" />
       </a>
       <button
         className="burger icon"
@@ -214,6 +222,9 @@ function Header({ page, theme, onToggleTheme }) {
         })}
       </nav>
       <div className="header-actions">
+        <button className="favorites-shortcut" type="button" onClick={onShowFavorites} aria-label={`Открыть избранное, материалов: ${favoritesCount}`}>
+          <span aria-hidden="true">♡</span><span>Избранное</span><b>{favoritesCount}</b>
+        </button>
         <button
           className="icon theme"
           type="button"
@@ -235,9 +246,8 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-top">
-        <a className="logo" href={CONTACTS.vk} target="_blank" rel="noopener noreferrer">
-          <img className="logo-image" src="/kinofun-favicon.svg" alt="" />
-          <span>KinoFun<small>КиноФан</small></span>
+        <a className="logo" href={CONTACTS.vk} target="_blank" rel="noopener noreferrer" aria-label="CinePix — открыть сообщество ВКонтакте">
+          <img className="logo-image" src="/cinepix-wordmark.png" alt="" />
         </a>
         <p>Хорошие истории становятся ближе.</p>
         <div>
@@ -256,31 +266,178 @@ function Footer() {
 
 function Poster({ item, priority = false }) {
   const image = imageUrl(item.poster);
-  const image2x = item.poster2x?.startsWith("data:")
+  const image2xCandidate = item.poster2x?.startsWith("data:")
     ? ""
-    : imageUrl(item.poster2x);
+    : imageUrl(item.poster2x || highResolutionPosterUrl(item.poster));
+  const image2x = image2xCandidate !== image ? image2xCandidate : "";
+  const [posterSource, setPosterSource] = useState("responsive");
+  const [imageState, setImageState] = useState(image ? "loading" : "missing");
+  useEffect(() => {
+    setPosterSource("responsive");
+    setImageState(image ? "loading" : "missing");
+  }, [image]);
+  const handleImageError = (event) => {
+    if (image2x && posterSource === "responsive") {
+      setPosterSource(event.currentTarget.currentSrc === image ? "highResolution" : "standard");
+      setImageState("loading");
+      return;
+    }
+    setImageState("missing");
+  };
   return (
-    <div className={`poster ${paletteNames.includes(item.palette) ? item.palette : "violet"}`}>
-      <span>{item.title}</span>
-      <small className="poster-number" aria-hidden="true">
-        {item.type === "animation" ? "АНИМАЦИЯ" : "КИНО"} / {item.year}
-      </small>
-      {image && (
+    <div className={`poster ${paletteNames.includes(item.palette) ? item.palette : "violet"}${imageState === "loading" ? " is-loading" : ""}${imageState === "missing" ? " is-missing" : ""}`}>
+      {imageState === "loading" && <span className="poster-loading" aria-hidden="true" />}
+      {imageState !== "loaded" && (
+        <div className={`poster-placeholder${imageState === "loading" ? " is-poster-loading" : ""}`}>
+          <span>{item.title}</span>
+          <small>{imageState === "loading" ? "ЗАГРУЖАЕМ ПОСТЕР" : "ПОСТЕР СКОРО ПОЯВИТСЯ"}</small>
+        </div>
+      )}
+      {image && imageState !== "missing" && (
         <img
-          src={image}
-          srcSet={image2x ? `${image} 1x, ${image2x} 2x` : undefined}
+          src={posterSource === "highResolution" ? image2x : image}
+          srcSet={image2x && posterSource === "responsive" ? `${image} 1x, ${image2x} 2x` : undefined}
           alt={`Постер: ${item.title}`}
+          referrerPolicy="no-referrer"
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           decoding="async"
-          sizes="(max-width: 600px) 88vw, (max-width: 850px) 44vw, (max-width: 1200px) 30vw, 260px"
+          sizes="(max-width: 600px) 44vw, (max-width: 850px) 30vw, (max-width: 1200px) 22vw, 260px"
+          className={imageState === "loaded" ? "is-loaded" : ""}
+          onLoad={() => setImageState("loaded")}
+          onError={handleImageError}
         />
+      )}
+      {imageState !== "missing" && <small className="poster-number" aria-hidden="true">{item.type === "animation" ? "АНИМАЦИЯ" : "КИНО"} / {item.year}</small>}
+    </div>
+  );
+}
+
+function getGenres(genreList) {
+  return [...new Map(
+    genreList
+      .split(",")
+      .map((genre) => genre.trim())
+      .filter(Boolean)
+      .map((genre) => {
+        const normalized = genre.toLocaleLowerCase("ru");
+        const label = normalized.charAt(0).toLocaleUpperCase("ru") + normalized.slice(1);
+        return [normalized, label];
+      }),
+  ).values()];
+}
+
+const sortOptions = [
+  ["new", "Сначала новинки"],
+  ["year", "По году выпуска"],
+  ["title", "По названию"],
+];
+
+function SortControl({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const controlRef = useRef(null);
+  const buttonRef = useRef(null);
+  const optionRefs = useRef([]);
+  const selectedIndex = sortOptions.findIndex(([option]) => option === value);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const closeOnOutsideClick = (event) => {
+      if (!controlRef.current?.contains(event.target)) setOpen(false);
+    };
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+
+  const moveFocus = (index) => {
+    const nextIndex = (index + sortOptions.length) % sortOptions.length;
+    optionRefs.current[nextIndex]?.focus();
+  };
+  const openAndFocus = (index) => {
+    setOpen(true);
+    window.requestAnimationFrame(() => moveFocus(index));
+  };
+
+  return (
+    <div className={`sort${open ? " is-open" : ""}`} ref={controlRef}>
+      <span className="sr-only" id="sort-label">Сортировка</span>
+      <button
+        ref={buttonRef}
+        className="sort-trigger"
+        type="button"
+        aria-labelledby="sort-label sort-value"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls="sort-options"
+        onClick={() => setOpen((current) => !current)}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+            event.preventDefault();
+            openAndFocus(selectedIndex);
+          }
+        }}
+      >
+        <span id="sort-value">{sortOptions[selectedIndex][1]}</span>
+        <span className="sort-icon" aria-hidden="true">⌄</span>
+      </button>
+      {open && (
+        <div className="sort-options" id="sort-options" role="listbox" aria-labelledby="sort-label">
+          {sortOptions.map(([option, label], index) => (
+            <button
+              key={option}
+              ref={(node) => { optionRefs.current[index] = node; }}
+              className="sort-option"
+              type="button"
+              role="option"
+              aria-selected={option === value}
+              tabIndex={-1}
+              onClick={() => {
+                onChange(option);
+                setOpen(false);
+                buttonRef.current?.focus();
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  moveFocus(index + 1);
+                } else if (event.key === "ArrowUp") {
+                  event.preventDefault();
+                  moveFocus(index - 1);
+                } else if (event.key === "Home") {
+                  event.preventDefault();
+                  moveFocus(0);
+                } else if (event.key === "End") {
+                  event.preventDefault();
+                  moveFocus(sortOptions.length - 1);
+                } else if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onChange(option);
+                  setOpen(false);
+                  buttonRef.current?.focus();
+                }
+              }}
+            >
+              <span>{label}</span>
+              {option === value && <span aria-hidden="true">✓</span>}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );
 }
 
-function MovieCard({ item, onPreview, priority = false }) {
+function MovieCard({ item, onPreview, priority = false, isFavorite, onToggleFavorite }) {
   const [trailerOpen, setTrailerOpen] = useState(false);
   const watchUrl = safeUrl(item.links?.vk);
   const trailerUrl = safeUrl(item.trailer);
@@ -295,21 +452,31 @@ function MovieCard({ item, onPreview, priority = false }) {
       >
         <Poster item={item} priority={priority} />
       </button>
+      {onToggleFavorite && (
+        <button
+          className={`favorite-toggle${isFavorite ? " is-favorite" : ""}`}
+          type="button"
+          aria-label={isFavorite ? `Убрать «${item.title}» из избранного` : `Добавить «${item.title}» в избранное`}
+          aria-pressed={Boolean(isFavorite)}
+          onClick={() => onToggleFavorite(item.id)}
+        >{isFavorite ? "♥" : "♡"}</button>
+      )}
       {item.isNew && <span className="new-badge">НОВИНКА</span>}
       <div className="card-body">
         <div className="card-meta">
-          <span>{item.year} · {item.genre}</span>
+          <span>{item.year} · {getGenres(item.genre).join(" · ")}</span>
           {item.age && <span>{item.age}</span>}
         </div>
         <h3><a href={getItemUrl(item)}>{item.title}</a></h3>
-        <p>{item.description}</p>
         <div className="actions card-actions">
           {watchUrl
             ? <a className="button primary watch-button" href={watchUrl} target="_blank" rel="noopener noreferrer">Смотреть</a>
-            : <button className="button primary watch-button" type="button" disabled>Смотреть — скоро</button>}
+            : <button className="button primary watch-button" type="button" disabled>{item.comingSoon ? "Скоро выйдет" : "Смотреть — скоро"}</button>}
           {trailerEmbed
             ? <button className="button secondary card-action-button" type="button" onClick={() => setTrailerOpen(true)}>Трейлер</button>
-            : trailerUrl && <a className="button secondary card-action-button" href={trailerUrl} target="_blank" rel="noopener noreferrer">Трейлер ↗</a>}
+            : trailerUrl
+              ? <a className="button secondary card-action-button" href={trailerUrl} target="_blank" rel="noopener noreferrer">Трейлер ↗</a>
+              : <a className="button secondary card-action-button" href={SITE.vkVideos} target="_blank" rel="noopener noreferrer">Трейлеры VK ↗</a>}
           <a className="button secondary card-action-button" href={getItemUrl(item)}>Подробнее</a>
         </div>
       </div>
@@ -371,10 +538,10 @@ function PreviewDialog({ item, onClose }) {
         <div>
           <p className="eyebrow">{item.type === "animation" ? "МУЛЬТФИЛЬМ" : "ФИЛЬМ"} / {item.year}</p>
           <h2>{item.title}</h2>
-          <p>{item.description}</p>
           <p>{item.genre} · {item.age || "Возраст не указан"}</p>
           <div className="actions">
             {safeUrl(item.links?.vk) && <a className="button primary" href={safeUrl(item.links.vk)} target="_blank" rel="noopener noreferrer">Смотреть</a>}
+            {item.comingSoon && <button className="button primary" type="button" disabled>Скоро выйдет</button>}
             <a className="button secondary" href={getItemUrl(item)}>Подробнее ↗</a>
           </div>
         </div>
@@ -383,32 +550,47 @@ function PreviewDialog({ item, onClose }) {
   );
 }
 
-function Catalog({ defaultType = "all", onPreview, standalone = false }) {
+function Catalog({ defaultType = "all", onPreview, standalone = false, favorites = [], onToggleFavorite }) {
   const [query, setQuery] = useState("");
   const [type, setType] = useState(defaultType);
   const [genres, setGenres] = useState([]);
   const [sort, setSort] = useState("new");
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
   useEffect(() => {
     const applyMood = (event) => {
       setQuery("");
       setType("all");
       setGenres(event.detail ? [event.detail] : []);
+      setFavoritesOnly(false);
       setSuggestionsOpen(false);
     };
     window.addEventListener("kinofun:mood", applyMood);
-    return () => window.removeEventListener("kinofun:mood", applyMood);
+    const showFavorites = () => {
+      setFavoritesOnly(true);
+      setQuery("");
+      setGenres([]);
+      setSuggestionsOpen(false);
+    };
+    window.addEventListener("cinepix:favorites", showFavorites);
+    if (new URLSearchParams(window.location.search).get("favorites") === "1") showFavorites();
+    return () => {
+      window.removeEventListener("kinofun:mood", applyMood);
+      window.removeEventListener("cinepix:favorites", showFavorites);
+    };
   }, []);
   const uniqueGenres = useMemo(
-    () => [...new Set(ITEMS.map((item) => item.genre))].sort((a, b) => a.localeCompare(b, "ru")),
+    () => [...new Set(ITEMS.flatMap((item) => getGenres(item.genre)))].sort((a, b) => a.localeCompare(b, "ru")),
     [],
   );
   const filtered = useMemo(() => {
     const search = query.trim().toLocaleLowerCase("ru");
     const items = ITEMS.filter((item) =>
       (type === "all" || item.type === type)
+      && (!favoritesOnly || favorites.includes(item.id))
       && (!genres.length || genres.some((genre) =>
-        item.genre.toLocaleLowerCase("ru").includes(genre.toLocaleLowerCase("ru"))))
+        getGenres(item.genre).some((itemGenre) =>
+          itemGenre.toLocaleLowerCase("ru") === genre.toLocaleLowerCase("ru"))))
       && (!search || [item.title, item.details?.originalTitle]
         .filter(Boolean)
         .some((title) => title.toLocaleLowerCase("ru").includes(search))),
@@ -418,7 +600,7 @@ function Catalog({ defaultType = "all", onPreview, standalone = false }) {
       : sort === "year"
         ? (a, b) => b.year - a.year
         : (a, b) => Number(b.isNew) - Number(a.isNew) || b.year - a.year);
-  }, [genres, query, sort, type]);
+  }, [favorites, favoritesOnly, genres, query, sort, type]);
   const suggestions = query.trim()
     ? filtered.slice(0, 6)
     : [];
@@ -432,6 +614,7 @@ function Catalog({ defaultType = "all", onPreview, standalone = false }) {
     setGenres([]);
     setSort("new");
     setSuggestionsOpen(false);
+    setFavoritesOnly(false);
   };
 
   return (
@@ -474,14 +657,7 @@ function Catalog({ defaultType = "all", onPreview, standalone = false }) {
             </ul>
           )}
         </div>
-        <label className="sort">
-          <span className="sr-only">Сортировка</span>
-          <select value={sort} onChange={(event) => setSort(event.target.value)}>
-            <option value="new">Сначала новинки</option>
-            <option value="year">По году выпуска</option>
-            <option value="title">По названию</option>
-          </select>
-        </label>
+        <SortControl value={sort} onChange={setSort} />
       </div>
       <div className="filters" role="group" aria-label="Тип материала">
         {[["all", "Все истории"], ["film", "Фильмы"], ["animation", "Мультфильмы"]].map(([value, label]) => (
@@ -510,14 +686,20 @@ function Catalog({ defaultType = "all", onPreview, standalone = false }) {
           </button>
         ))}
       </div>
-      <p className="muted" aria-live="polite">Найдено историй: <strong>{filtered.length}</strong></p>
+      <div className="catalog-result-bar">
+        <p className="muted" aria-live="polite">{favoritesOnly ? "В избранном:" : "Найдено историй:"} <strong>{filtered.length}</strong></p>
+        <button className={`favorites-filter${favoritesOnly ? " active" : ""}`} type="button" aria-pressed={favoritesOnly} onClick={() => setFavoritesOnly((value) => !value)}>
+          {favoritesOnly ? "♥ Показать весь каталог" : "♡ Только избранное"}
+        </button>
+      </div>
       <div className="cards" id={standalone ? "cartoons-grid" : "catalog-grid"}>
-        {filtered.map((item, index) => <MovieCard key={item.id} item={item} onPreview={onPreview} priority={index < 4} />)}
+        {filtered.map((item, index) => <MovieCard key={item.id} item={item} onPreview={onPreview} priority={index < 4} isFavorite={favorites.includes(item.id)} onToggleFavorite={onToggleFavorite} />)}
       </div>
       {!filtered.length && (
         <div className="empty">
-          <h3>История пока не нашлась</h3>
-          <p>Попробуйте другое название или сбросьте фильтры.</p>
+          <span className="empty-symbol" aria-hidden="true">{favoritesOnly ? "♡" : "✦"}</span>
+          <h3>{favoritesOnly && favorites.length === 0 ? "Здесь пока пусто" : "История пока не нашлась"}</h3>
+          <p>{favoritesOnly && favorites.length === 0 ? "Нажмите на сердечко у фильма, чтобы сохранить его здесь." : "Попробуйте другое название или сбросьте фильтры."}</p>
           <button className="button secondary" type="button" onClick={reset}>Сбросить фильтры</button>
         </div>
       )}
@@ -525,8 +707,54 @@ function Catalog({ defaultType = "all", onPreview, standalone = false }) {
   );
 }
 
-function HomePage({ onPreview }) {
-  const newest = ITEMS.filter((item) => item.isNew).slice(0, 3);
+function CollectionShelf({ eyebrow, title, items, onPreview, favorites, onToggleFavorite, id }) {
+  const trackRef = useRef(null);
+  if (!items.length) return null;
+  const scroll = (direction) => trackRef.current?.scrollBy({ left: direction * 300, behavior: "smooth" });
+  return (
+    <section className="section collection-section" aria-labelledby={`${id}-title`}>
+      <div className="section-title">
+        <div><p className="eyebrow">{eyebrow}</p><h2 id={`${id}-title`}>{title}</h2></div>
+        <div className="shelf-controls">
+          <button className="icon shelf-arrow" type="button" aria-label="Прокрутить подборку назад" onClick={() => scroll(-1)}>←</button>
+          <button className="icon shelf-arrow" type="button" aria-label="Прокрутить подборку вперёд" onClick={() => scroll(1)}>→</button>
+        </div>
+      </div>
+      <div className="shelf-track" ref={trackRef} tabIndex={0} aria-labelledby={`${id}-title`}>
+        {items.map((item, index) => <MovieCard key={item.id} item={item} onPreview={onPreview} priority={index < 2} isFavorite={favorites.includes(item.id)} onToggleFavorite={onToggleFavorite} />)}
+      </div>
+    </section>
+  );
+}
+
+function Spotlight({ item, onPreview, isFavorite, onToggleFavorite }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const image = imageUrl(item.poster);
+  return (
+    <section className="section spotlight-section" aria-label={`Выбор CinePix: ${item.title}`}>
+      <article className={`spotlight${imageFailed || !image ? " spotlight-fallback" : ""}`}>
+        {image && !imageFailed && <img className="spotlight-image" src={image} alt="" aria-hidden="true" referrerPolicy="no-referrer" onError={() => setImageFailed(true)} />}
+        <div className="spotlight-content">
+          <p className="eyebrow"><span className="live-dot" /> ВЫБОР CINEPIX</p>
+          <p className="spotlight-meta">{item.type === "animation" ? "МУЛЬТФИЛЬМ" : "ФИЛЬМ"} · {item.year} · {item.age || "Для всей семьи"}</p>
+          <h2>{item.title}</h2>
+          <div className="actions">
+            {safeUrl(item.links?.vk) && <a className="button primary" href={safeUrl(item.links.vk)} target="_blank" rel="noopener noreferrer">Смотреть ↗</a>}
+            {item.comingSoon && <button className="button primary" type="button" disabled>Скоро выйдет</button>}
+            <button className="button secondary" type="button" onClick={() => onPreview(item)}>О фильме</button>
+            <button className={`spotlight-favorite${isFavorite ? " is-favorite" : ""}`} type="button" aria-label={isFavorite ? "Убрать из избранного" : "Добавить в избранное"} aria-pressed={isFavorite} onClick={() => onToggleFavorite(item.id)}>{isFavorite ? "♥" : "♡"} <span>{isFavorite ? "В избранном" : "В избранное"}</span></button>
+          </div>
+        </div>
+      </article>
+    </section>
+  );
+}
+
+function HomePage({ onPreview, favorites, onToggleFavorite }) {
+  const newest = ITEMS.filter((item) => item.isNew).sort((a, b) => b.year - a.year).slice(0, 8);
+  const family = ITEMS.filter((item) => item.type === "animation").slice(0, 8);
+  const adventures = ITEMS.filter((item) => item.genre.toLocaleLowerCase("ru").includes("приключ")).slice(0, 8);
+  const spotlight = ITEMS.find((item) => item.id === "how-to-make-a-killing") || ITEMS[0];
   const [randomItem, setRandomItem] = useState(null);
   const chooseMood = (genre) => {
     const section = document.getElementById("catalog");
@@ -555,15 +783,12 @@ function HomePage({ onPreview }) {
           <div className="orbit o1" /><div className="orbit o2" />
           <div className="hero-card rear"><span>ФЭНТЕЗИ / 2026</span><b>ПРАКТИЧЕСКАЯ<br />МАГИЯ 2</b><i>✦</i></div>
           <div className="hero-card front"><span>БОЕВИК / 2026</span><div className="portal" /><b>НАТИСК</b><small>БЕГСТВО ИЗ СЕКРЕТНОЙ ЛАБОРАТОРИИ</small></div>
-          <div className="floating-label">✦ Следующая любимая история — здесь</div>
         </div>
         <a className="scroll-cue" href="#new">ЛИСТАЙТЕ, ЧТОБЫ ОТКРЫТЬ БОЛЬШЕ ↓</a>
       </section>
       <div className="ticker" aria-hidden="true"><div>ФАНТАСТИКА ✦ ПРИКЛЮЧЕНИЯ ✦ СЕМЕЙНЫЙ ВЕЧЕР ✦ ДРАМА ✦ КОМЕДИЯ ✦ АНИМАЦИЯ ✦ ФАНТАСТИКА ✦ ПРИКЛЮЧЕНИЯ ✦ СЕМЕЙНЫЙ ВЕЧЕР ✦ ДРАМА ✦ КОМЕДИЯ ✦ АНИМАЦИЯ ✦</div></div>
-      <section className="section" id="new">
-        <div className="section-title reveal"><div><p className="eyebrow">СВЕЖИЙ ВЗГЛЯД</p><h2>Новые <em>впечатления</em></h2></div><a className="text-link" href="#catalog">Весь каталог ↗</a></div>
-        <div className="cards featured">{newest.map((item, index) => <MovieCard key={item.id} item={item} onPreview={onPreview} priority={index === 0} />)}</div>
-      </section>
+      <div id="new"><Spotlight item={spotlight} onPreview={onPreview} isFavorite={favorites.includes(spotlight.id)} onToggleFavorite={onToggleFavorite} /></div>
+      <CollectionShelf id="new-releases" eyebrow="СВЕЖИЙ ВЗГЛЯД" title={<>Новые <em>впечатления</em></>} items={newest} onPreview={onPreview} favorites={favorites} onToggleFavorite={onToggleFavorite} />
       <section className="section mood-section reveal">
         <div><p className="eyebrow">СЕГОДНЯ ХОЧЕТСЯ…</p><h2>Выберите настроение.<br /><em>Мы найдём историю.</em></h2></div>
         <div className="moods">
@@ -573,13 +798,9 @@ function HomePage({ onPreview }) {
           <button type="button" onClick={() => chooseMood("Драма")}>◒<b>Почувствовать больше</b><span>Драмы</span></button>
         </div>
       </section>
-      <Catalog onPreview={onPreview} />
-      <section className="section random-banner reveal">
-        <div className="random-symbol" aria-hidden="true">⚄</div>
-        <div><p className="eyebrow">ПОЗВОЛЬТЕ СЛУЧАЮ РЕШИТЬ</p><h2>А если самое интересное —<br /><em>то, что вы не искали?</em></h2><p className="muted">Один клик. Случайная история. Неожиданно хороший вечер.</p>
-          <button className="button primary" type="button" onClick={() => setRandomItem(ITEMS[Math.floor(Math.random() * ITEMS.length)])}>Удивите меня ↗</button>
-        </div>
-      </section>
+      <CollectionShelf id="family" eyebrow="ВРЕМЯ БЫТЬ ВМЕСТЕ" title={<>Для всей <em>семьи</em></>} items={family} onPreview={onPreview} favorites={favorites} onToggleFavorite={onToggleFavorite} />
+      <CollectionShelf id="adventures" eyebrow="ВРЕМЯ ОТПРАВИТЬСЯ В ПУТЬ" title={<>Большие <em>приключения</em></>} items={adventures} onPreview={onPreview} favorites={favorites} onToggleFavorite={onToggleFavorite} />
+      <Catalog onPreview={onPreview} favorites={favorites} onToggleFavorite={onToggleFavorite} />
       <section className="section">
         <div className="section-title reveal"><div><p className="eyebrow">ТРИ ПРОСТЫХ ШАГА</p><h2>От выбора <em>к просмотру</em></h2></div></div>
         <div className="steps">
@@ -608,9 +829,9 @@ function AboutPage() {
       <section className="section"><p className="eyebrow">НАША ИСТОРИЯ</p><h2>От идеи <em>к сообществу</em></h2><div className="timeline">{SITE.milestones.map((milestone, index) => <article className="reveal" key={milestone.title}><small>ЭТАП 0{index + 1}</small><h3>{milestone.title}</h3><p className="muted">{milestone.description}</p></article>)}</div></section>
       <section className="section"><p className="eyebrow">ПО ТУ СТОРОНУ ЭКРАНА</p><h2>Знакомьтесь: <em>ваша команда</em></h2>
         <div className="steps">
-          <article className="glass reveal"><span>◈</span><h3>Автор канала</h3><p>КиноФан — самостоятельный проект: каталог развивается, чтобы сделать выбор фильма простым и приятным.</p></article>
+          <article className="glass reveal"><span>◈</span><h3>Автор канала</h3><p>CinePix — самостоятельный проект: каталог развивается, чтобы сделать выбор фильма простым и приятным.</p></article>
           <article className="glass reveal"><span>✦</span><h3>Редактор подборок</h3><p>В каталоге появляются интересные фильмы и мультфильмы, описания, постеры, трейлеры и ссылки.</p></article>
-          <article className="glass reveal"><span>♡</span><h3>Наши зрители</h3><p>Вы помогаете КиноФан становиться лучше: смотрите, обсуждаете и подсказываете, что добавить.</p></article>
+          <article className="glass reveal"><span>♡</span><h3>Наши зрители</h3><p>Вы помогаете CinePix становиться лучше: смотрите, обсуждаете и подсказываете, что добавить.</p></article>
         </div>
       </section>
       <section className="section narrow"><p className="eyebrow">НАШИ ДОГОВОРЁННОСТИ</p><h2>Вместе <em>комфортнее</em></h2><div className="glass"><p>01. Уважайте других участников и их мнение.</p><p>02. Предупреждайте о спойлерах.</p><p>03. Делитесь только разрешёнными ссылками.</p><p>04. Сообщайте автору о неработающих материалах.</p></div><a className="button primary" href={CONTACTS.vkChat} target="_blank" rel="noopener noreferrer">Присоединиться к разговору</a></section>
@@ -728,7 +949,7 @@ function MoviePage({ item, onPreview }) {
         <p className="description">{item.description}</p>
         {(item.team?.director || item.team?.cast) && <div className="team"><h3>Кто в команде</h3>{item.team.director && <p>Режиссёр: {item.team.director}</p>}{item.team.cast && <p>Актёры / озвучка: {item.team.cast}</p>}</div>}
         {item.details?.synopsis && <div className="team movie-synopsis"><h3>Подробности сюжета</h3><p>{item.details.synopsis}</p></div>}
-        <div className="actions">{safeUrl(item.links?.vk) && <a className="button primary" href={safeUrl(item.links.vk)} target="_blank" rel="noopener noreferrer">Смотреть ↗</a>}{trailerEmbed ? <button className="button secondary" type="button" onClick={() => setTrailerOpen(true)}>Трейлер</button> : safeUrl(item.trailer) && <a className="button secondary" href={safeUrl(item.trailer)} target="_blank" rel="noopener noreferrer">Трейлер ↗</a>}<button className="button secondary" type="button" onClick={() => onPreview(item)}>Кратко о фильме</button></div>
+        <div className="actions">{safeUrl(item.links?.vk) ? <a className="button primary" href={safeUrl(item.links.vk)} target="_blank" rel="noopener noreferrer">Смотреть ↗</a> : item.comingSoon && <button className="button primary" type="button" disabled>Скоро выйдет</button>}{trailerEmbed ? <button className="button secondary" type="button" onClick={() => setTrailerOpen(true)}>Трейлер</button> : safeUrl(item.trailer) ? <a className="button secondary" href={safeUrl(item.trailer)} target="_blank" rel="noopener noreferrer">Трейлер ↗</a> : <a className="button secondary" href={SITE.vkVideos} target="_blank" rel="noopener noreferrer">Трейлеры VK ↗</a>}<button className="button secondary" type="button" onClick={() => onPreview(item)}>Кратко о фильме</button></div>
       </div></div>
       <div className="team"><h2>Информация о фильме</h2>{[["Оригинальное название", item.details?.originalTitle], ["Дата выхода", item.details?.releaseDate], ["Продолжительность", item.details?.runtime], ["Страна", item.details?.country], ["Язык", item.details?.language], ["Возрастная классификация", item.details?.classification], ["Сценарий", item.details?.screenplay], ["Дистрибьютор", item.details?.distribution]].filter(([, value]) => value).map(([label, value]) => <p key={label}>{label}: {value}</p>)}</div>
     </section>{similar.length > 0 && <section className="section"><h2>Похожие <em>истории</em></h2><div className="cards">{similar.map((entry) => <MovieCard key={entry.id} item={entry} onPreview={onPreview} />)}</div></section>}{trailerOpen && <TrailerDialog item={item} src={trailerEmbed} onClose={() => setTrailerOpen(false)} />}</main>
@@ -749,6 +970,7 @@ const editorFields = [
   ["cast", "Актёры / озвучка", "text"],
   ["vk", "Ссылка ВКонтакте", "url"],
   ["trailer", "Ссылка на трейлер", "url"],
+  ["comingSoon", "Показывать кнопку «Скоро выйдет»", "checkbox"],
 ];
 const emptyDraft = () => ({
   title: "",
@@ -764,6 +986,7 @@ const emptyDraft = () => ({
   cast: "",
   vk: "",
   trailer: "",
+  comingSoon: false,
   isNew: false,
 });
 
@@ -814,13 +1037,14 @@ function AdminPage({ onToast }) {
       }
     }
     const old = draft.find((item) => item.id === editingId);
+    const posterChanged = Boolean(posterFile) || form.poster !== old?.poster;
     const item = {
       ...old,
       ...form,
       id: editingId || form.title.toLocaleLowerCase("ru").replace(/[^a-zа-яё0-9]+/gi, "-").replace(/^-|-$/g, "") || `material-${Date.now()}`,
       year: Number(form.year),
       poster: posterFile || form.poster || old?.poster || "",
-      poster2x: form.poster2x || old?.poster2x || "",
+      poster2x: form.poster2x || (posterChanged ? "" : old?.poster2x || ""),
       team: { ...old?.team, director: form.director, cast: form.cast },
       details: old?.details || {},
       links: { ...old?.links, vk: form.vk },
@@ -865,6 +1089,8 @@ function AdminPage({ onToast }) {
           <h2>{editingId ? "Редактирование материала" : "Новый материал"}</h2>
           {editorFields.map(([name, label, kind, required]) => <React.Fragment key={name}><label htmlFor={`edit-${name}`}>{label}</label>{kind === "textarea"
             ? <textarea id={`edit-${name}`} name={name} rows="4" required={required} value={form[name]} onChange={update} />
+            : kind === "checkbox"
+              ? <input id={`edit-${name}`} name={name} type="checkbox" checked={form[name]} onChange={update} />
             : kind === "select"
               ? <select id={`edit-${name}`} name={name} value={form[name]} required={required} onChange={update}>{(name === "type" ? [["film", "Фильм"], ["animation", "Мультфильм"]] : paletteNames.map((color) => [color, color])).map(([value, text]) => <option key={value} value={value}>{text}</option>)}</select>
               : <input id={`edit-${name}`} name={name} type={kind} required={required} min={name === "year" ? "1888" : undefined} max={name === "year" ? String(new Date().getFullYear() + 5) : undefined} value={form[name]} onChange={(event) => { if (name === "poster") setPosterFile(""); update(event); }} />}</React.Fragment>)}
@@ -926,12 +1152,27 @@ function App({ url }) {
   const page = getPage(path);
   const movie = page === "movie" ? getItemByPath(path, search) : null;
   const [theme, setTheme] = useState("dark");
+  const [favorites, setFavorites] = useState([]);
   const [preview, setPreview] = useState(null);
   const [toast, setToast] = useState("");
   const timer = useRef(null);
 
   useEffect(() => {
     setTheme(readTheme());
+  }, []);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(FAVORITES_KEY);
+      if (!saved) return;
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.every((id) => typeof id === "string")) {
+        setFavorites(parsed);
+      } else {
+        notify("Не удалось загрузить избранное: сохранённые данные имеют неверный формат.");
+      }
+    } catch {
+      notify("Не удалось загрузить избранное из хранилища браузера.");
+    }
   }, []);
   useEffect(() => {
     const restoreRoute = () => setCurrentUrl(
@@ -978,6 +1219,31 @@ function App({ url }) {
       notify("Не удалось сохранить тему. Она останется включённой до закрытия страницы.");
     }
   };
+  const toggleFavorite = (id) => {
+    const next = favorites.includes(id)
+      ? favorites.filter((favoriteId) => favoriteId !== id)
+      : [...favorites, id];
+    setFavorites(next);
+    try {
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+    } catch {
+      notify("Не удалось сохранить избранное в этом браузере.");
+    }
+  };
+  const showFavorites = () => {
+    if (page !== "index") {
+      const nextUrl = "/?favorites=1#catalog";
+      window.history.pushState(null, "", nextUrl);
+      setCurrentUrl(nextUrl);
+      setPreview(null);
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("cinepix:favorites"));
+    document.getElementById("catalog")?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start",
+    });
+  };
   const handleNavigation = (event) => {
     if (event.defaultPrevented || event.button !== 0 ||
       event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -1014,10 +1280,10 @@ function App({ url }) {
       <SkyCanvas />
       <div className="cursor-glow" aria-hidden="true" />
       <div className="reading-progress" aria-hidden="true" />
-      <Header page={page} theme={theme} onToggleTheme={toggleTheme} />
-      {page === "index" && <HomePage onPreview={setPreview} />}
+      <Header page={page} theme={theme} onToggleTheme={toggleTheme} favoritesCount={favorites.length} onShowFavorites={showFavorites} />
+      {page === "index" && <HomePage onPreview={setPreview} favorites={favorites} onToggleFavorite={toggleFavorite} />}
       {page === "about" && <AboutPage />}
-      {page === "cartoons" && <main id="main"><Catalog defaultType="animation" onPreview={setPreview} standalone /></main>}
+      {page === "cartoons" && <main id="main"><Catalog defaultType="animation" onPreview={setPreview} standalone favorites={favorites} onToggleFavorite={toggleFavorite} /></main>}
       {page === "faq" && <FaqPage onToast={notify} />}
       {page === "support" && <SupportPage />}
       {page === "movie" && <MoviePage item={movie} onPreview={setPreview} />}

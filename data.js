@@ -1,16 +1,19 @@
 /* Данные каталога. Замените название канала и контакты своими.
 Поля материала: id — уникальный адрес; title — название; type — film или animation;
-year — год; genre — жанр; age — возраст; description — описание; poster — путь images/poster.jpg или URL;
+year — год; genre — жанр; age — возраст; description — описание; poster — путь к постеру;
+poster2x — версия постера для экранов с плотностью пикселей 2x;
 palette — цвет заглушки; team.director/cast — команда; details — дополнительные сведения о фильме;
-links.vk — ссылка для просмотра; isNew — метка новинки.
+links.vk — ссылка для просмотра; trailer — трейлер; isNew — метка новинки;
+comingSoon — вместо просмотра показать статус «Скоро выйдет».
 Чтобы добавить карточку, скопируйте объект из ITEMS и задайте новый id. */
 export const SITE = {
-  name: "KinoFun — КиноФан",
+  name: "CinePix",
   tagline: "У каждого вечера есть своя история.", // Замените описанием.
-  stats: { materials: 21 },
+  stats: { materials: 28 },
   vkGroupId: 242325248,
+  vkVideos: "https://vkvideo.ru/@club242325248/all",
   story:
-    "Хороший вечер часто начинается с вопроса: что посмотреть? Так появился КиноФан — место, где можно быстро найти фильм или мультфильм, посмотреть трейлер и выбрать историю для настроения. А после титров — поделиться впечатлениями с другими зрителями.",
+    "Хороший вечер часто начинается с вопроса: что посмотреть? Так появился CinePix — место, где можно быстро найти фильм или мультфильм, посмотреть трейлер и выбрать историю для настроения. А после титров — поделиться впечатлениями с другими зрителями.",
   milestones: [
     {
       title: "Началось с идеи",
@@ -23,7 +26,7 @@ export const SITE = {
         "В каталоге стали появляться карточки с описаниями, постерами и трейлерами — так проще понять, подходит ли история.",
     },
     {
-      title: "КиноФан растёт",
+      title: "CinePix растёт",
       description:
         "Новые материалы и ваши отклики помогают постепенно развивать сайт и сообщество.",
     },
@@ -38,6 +41,228 @@ export const CONTACTS = {
 };
 export const ITEMS = [
   {
+    id: "play-dirty",
+    title: "Сыграть в ящик",
+    type: "film",
+    year: 2025,
+    genre: "Боевик, криминальный триллер",
+    age: "18+",
+    description:
+      "После ограбления и предательства профессиональный вор Паркер отправляется на поиски тех, кто разрушил его команду и забрал добычу. Ему предстоит продумать новый план и выяснить, кому ещё можно доверять.",
+    palette: "red",
+    poster: "/posters/play-dirty-1x.jpg",
+    poster2x: "/posters/play-dirty-2x.jpg",
+    team: {
+      director: "Шейн Блэк",
+      cast: "Марк Уолберг, Лакит Стэнфилд, Роза Салазар, Киган-Майкл Ки, Нат Вулф, Томас Джейн, Тони Шэлуб",
+    },
+    details: {
+      originalTitle: "Play Dirty",
+      releaseDate: "1 октября 2025 (Prime Video)",
+      country: "США",
+      language: "Английский",
+      classification: "R (США; 18+)",
+      screenplay: "Шейн Блэк",
+      distribution: "Amazon MGM Studios",
+      synopsis:
+        "Профессиональный вор Паркер и его команда оказываются втянуты в опасную игру после ограбления, которое заканчивается гибелью одного из сообщников и предательством. Паркер объединяется с Грофилдом, чтобы найти виновных и вернуть контроль над ситуацией.",
+    },
+    links: { telegram: "", vk: "", max: "", whatsapp: "", other: "" },
+    trailer: "https://vkvideo.ru/video-242325248_456239164",
+    comingSoon: true,
+    isNew: true,
+  },
+  {
+    id: "the-uprising",
+    title: "Восставший",
+    type: "film",
+    year: 2026,
+    genre: "Историческая драма, боевик",
+    age: "18+",
+    description:
+      "Англия 1381 года ещё не оправилась от Чёрной смерти. На фоне растущих налогов и недовольства властью крестьяне поднимают восстание, которое изменит ход истории.",
+    palette: "orange",
+    poster: "/posters/the-uprising-1x.jpg",
+    poster2x: "/posters/the-uprising-2x.jpg",
+    team: {
+      director: "Пол Гринграсс",
+      cast: "Эндрю Гарфилд, Джейми Белл, Стивен Диллэйн, Том Холландер, Космо Джарвис, Томасин Маккензи, Джонни Ли Миллер, Кэтрин Уотерстон",
+    },
+    details: {
+      originalTitle: "The Uprising",
+      releaseDate: "10 сентября 2026 (США); 9 октября 2026 (Великобритания)",
+      country: "Великобритания, США",
+      language: "Английский",
+      classification: "R (США; 18+)",
+      screenplay: "Пол Гринграсс",
+      distribution: "Universal Pictures",
+      synopsis:
+        "После эпидемии чумы Англия сталкивается с нехваткой денег и новыми налогами. В 1381 году недовольство перерастает в крестьянское восстание, во главе которого оказываются Уот Тайлер и Джон Болл.",
+    },
+    links: { telegram: "", vk: "", max: "", whatsapp: "", other: "" },
+    trailer: "https://vkvideo.ru/video-242325248_456239163",
+    comingSoon: true,
+    isNew: true,
+  },
+  {
+    id: "fall-2-deadpoint",
+    title: "Вышка 2",
+    type: "film",
+    year: 2026,
+    genre: "Триллер, выживание",
+    age: "18+",
+    description:
+      "После гибели сестры Джакс отправляется вместе с её подругой Люс в Таиланд, чтобы исполнить опасный план восхождения. На вершине их ждут разрушенная конструкция и борьба за выживание.",
+    palette: "blue",
+    poster: "/posters/fall-2-deadpoint-1x.jpg",
+    poster2x: "/posters/fall-2-deadpoint-2x.jpg",
+    team: {
+      director: "Питер и Майкл Спириги",
+      cast: "Харриет Слейтер, Арсема Томас, Том Бриттни, Вирджиния Гарднер",
+    },
+    details: {
+      originalTitle: "Fall 2: Deadpoint",
+      releaseDate: "2 сентября 2026 (США)",
+      runtime: "97 минут",
+      country: "США",
+      language: "Английский",
+      classification: "R (США; 18+)",
+      screenplay: "Джонатан Фрэнк, Скотт Манн",
+      distribution: "Lionsgate",
+      synopsis:
+        "Джакс тяжело переживает смерть сестры Шайло. Её подруга Люс убеждает Джакс отправиться в Таиланд и пройти опасный маршрут, который Шайло мечтала покорить. Оползни, непогода и нестабильная конструкция превращают поездку в борьбу за жизнь.",
+    },
+    links: { telegram: "", vk: "", max: "", whatsapp: "", other: "" },
+    trailer: "https://vkvideo.ru/video-242325248_456239165",
+    comingSoon: true,
+    isNew: true,
+  },
+  {
+    id: "the-mastermind",
+    title: "Гениальный план",
+    type: "film",
+    year: 2026,
+    genre: "Криминальная комедия",
+    description:
+      "Легендарный вор собирает двух незнакомцев, чтобы похитить «Мону Лизу». Вскоре выясняется, что они давно потерянные брат и сестра, а сам вор — их отец.",
+    palette: "gold",
+    poster: "/posters/the-mastermind-1x.jpg",
+    poster2x: "/posters/the-mastermind-2x.jpg",
+    team: {
+      director: "Тома Венсан",
+      cast: "Стэнли Туччи, Виктор Бельмондо, Симона Табаско, Марк Иванир",
+    },
+    details: {
+      originalTitle: "Masterplan",
+      releaseDate: "2026",
+      screenplay: "Тома Венсан, Дэвид Уолстенкрофт",
+      synopsis:
+        "Когда легендарный вор нацеливается на «Мону Лизу», он привлекает к ограблению двух молодых незнакомцев. Затем выясняется, что они давно потерянные брат и сестра, а он — их отец. Теперь неожиданной семье предстоит сработаться ради крупнейшего ограбления в их жизни.",
+    },
+    links: { telegram: "", vk: "", max: "", whatsapp: "", other: "" },
+    trailer: "https://vkvideo.ru/video-242325248_456239162",
+    comingSoon: true,
+    isNew: true,
+  },
+  {
+    id: "one-night-only",
+    title: "Всего одна ночь",
+    type: "film",
+    year: 2026,
+    genre: "Фантастика, романтическая комедия",
+    age: "18+",
+    description:
+      "В недалёком будущем незамужним и неженатым разрешают близость только одну ночь в году. В этот необычный вечер судьбы Оуэна и незнакомки пересекаются самым неожиданным образом.",
+    palette: "pink",
+    poster: "/posters/one-night-only-1x.jpg",
+    poster2x: "/posters/one-night-only-2x.jpg",
+    team: {
+      director: "Уилл Глак",
+      cast: "Моника Барбаро, Каллум Тёрнер, Майя Хоук, Молли Рингуолд, Левар Бёртон",
+    },
+    details: {
+      originalTitle: "One Night Only",
+      releaseDate: "7 августа 2026 (США)",
+      runtime: "102 минуты",
+      country: "США",
+      language: "Английский",
+      screenplay: "Трэвис Браун",
+      distribution: "Universal Pictures",
+      synopsis:
+        "В мире, где интимная близость разрешена только в одну ночь каждого года, Оуэн собирается сделать предложение своей девушке. Встреча с другой женщиной меняет его планы и связывает их судьбы на протяжении этой необычной ночи.",
+    },
+    links: { telegram: "", vk: "", max: "", whatsapp: "", other: "" },
+    trailer: "https://vkvideo.ru/video-242325248_456239161",
+    comingSoon: true,
+    isNew: true,
+  },
+  {
+    id: "the-sheep-detectives",
+    title: "Следствие ведут овечки",
+    type: "film",
+    year: 2026,
+    genre: "Детектив, комедия, драма",
+    age: "12+",
+    description:
+      "Когда погибает пастух, его стадо решает самостоятельно расследовать преступление. Овечки пытаются понять, кто из людей мог совершить убийство, и раскрыть тайну, которую знал их хозяин.",
+    palette: "green",
+    poster: "/posters/the-sheep-detectives-1x.jpg",
+    poster2x: "/posters/the-sheep-detectives-2x.jpg",
+    team: {
+      director: "Кайл Балда",
+      cast: "Хью Джекман, Николас Браун, Николас Голицын, Молли Гордон, Хонг Чау, Эмма Томпсон; озвучивание: Джулия Луи-Дрейфус, Брайан Крэнстон, Крис О’Дауд, Патрик Стюарт",
+    },
+    details: {
+      originalTitle: "The Sheep Detectives",
+      releaseDate: "8 мая 2026 (США)",
+      country: "Великобритания, США",
+      language: "Английский",
+      classification: "PG (США; 12+)",
+      screenplay: "Крейг Мазин",
+      distribution: "Amazon MGM Studios",
+      synopsis:
+        "Пастух Джордж каждый день читал своему стаду детективные истории. Когда его находят мёртвым, овцы понимают, что это было убийство, и начинают искать виновника среди людей, которых знал их хозяин.",
+    },
+    links: { telegram: "", vk: "", max: "", whatsapp: "", other: "" },
+    trailer: "https://vkvideo.ru/video-242325248_456239160",
+    comingSoon: true,
+    isNew: true,
+  },
+  {
+    id: "never-on-the-first-night",
+    title: "Мечтать не вредно",
+    type: "film",
+    year: 2026,
+    genre: "Спортивная драма, комедия",
+    description:
+      "Жереми работает в видеомагазине, а Буна убирает в аэропорту. Без денег, связей и хорошего английского они решаются пробиться в мир баскетбола и стать известными агентами НБА.",
+    palette: "violet",
+    poster: "/posters/never-on-the-first-night-1x.jpg",
+    poster2x: "/posters/never-on-the-first-night-2x.jpg",
+    team: {
+      director: "Антони Марсиано",
+      cast: "Рафаэль Кенар, Жан-Паскаль Зади",
+    },
+    details: {
+      originalTitle: "Le rêve américain",
+      releaseDate: "2026",
+      country: "Франция",
+      language: "Французский",
+      screenplay: "Антони Марсиано",
+      synopsis:
+        "Никто не ожидал, что Жереми, работавший в видеомагазине, и Буна, убиравший аэропорты, станут известными агентами НБА. Начав без денег, связей и знания английского, они добиваются успеха благодаря смелости и человеческому отношению к своему делу.",
+    },
+    links: {
+      telegram: "",
+      vk: "https://vkvideo.ru/video-242325248_456239157",
+      max: "",
+      whatsapp: "",
+      other: "",
+    },
+    trailer: "",
+    isNew: true,
+  },
+  {
     id: "how-to-make-a-killing",
     title: "Наследник",
     type: "film",
@@ -47,8 +272,8 @@ export const ITEMS = [
     description:
       "Беккет Редфеллоу вырос вдали от чрезвычайно богатой семьи, отказавшейся от него ещё до рождения. Когда на кону оказывается наследство, он решает вернуть себе место среди родственников — и обнаруживает, что путь к состоянию превращается в опасную игру.",
     palette: "gold",
-    poster:
-      "https://api-asset-production.s3.amazonaws.com/media/images/GS_A24_HTMAK_Payoff_1x1.71.jpg",
+    poster: "/posters/how-to-make-a-killing-1x.jpg",
+    poster2x: "/posters/how-to-make-a-killing-2x.jpg",
     team: {
       director: "Джон Паттон Форд",
       cast: "Глен Пауэлл, Маргарет Куолли, Эд Харрис, Джессика Хенвик, Билл Кэмп, Рафферти Лоу, Зак Вудс",
@@ -85,8 +310,8 @@ export const ITEMS = [
     description:
       "Фрэнк Касл пытается найти смысл жизни за пределами мести и оставить прошлое позади. Но новая сила вновь втягивает его в борьбу, заставляя столкнуться с призраками прошлого и решить, сможет ли он выбрать другой путь.",
     palette: "red",
-    poster:
-      "https://resizing.flixster.com/6pRJyskWzZHpMcwD4awtFZWd0vo=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzJkYjJkZWYwLTQ0NDItNDg0ZC05YTUyLTcyODMxNzk5MzRjOC5qcGc=",
+    poster: "/posters/punisher-one-last-kill-1x.jpg",
+    poster2x: "/posters/punisher-one-last-kill-2x.jpg",
     team: {
       director: "Рейнальдо Маркус Грин",
       cast: "Джон Бернтал, Джейсон Р. Мур, Роу Рэнселл, Мила Джеймс, Челси Бреа",
@@ -123,8 +348,8 @@ export const ITEMS = [
     description:
       "Спустя годы сёстры Салли и Джиллиан Оуэнс снова сталкиваются с древним семейным проклятием. Когда опасность грозит уже следующему поколению, им предстоит раскрыть тайну книги магии и защитить своих близких.",
     palette: "violet",
-    poster:
-      "https://upload.wikimedia.org/wikipedia/en/4/47/Practical_Magic_2_%28film_poster%29.png",
+    poster: "/posters/practical-magic-2-1x.jpg",
+    poster2x: "/posters/practical-magic-2-2x.jpg",
     team: {
       director: "Сюзанна Бир",
       cast: "Сандра Буллок, Николь Кидман, Дайан Уист, Стокард Чэннинг, Джоуи Кинг, Ли Пейс, Мэйси Уильямс, Шоло Маридуэнья",
@@ -157,8 +382,8 @@ export const ITEMS = [
     description:
       "Бывшая армейская снайперша Селеста живёт с дочерью Дейзи в трейлерном посёлке. Когда из секретного военного объекта сбегают генетически изменённые суперсолдаты, ей приходится защищать дочь и соседей от смертельной атаки.",
     palette: "green",
-    poster:
-      "https://upload.wikimedia.org/wikipedia/en/5/54/Onslaught_poster.jpg",
+    poster: "/posters/onslaught-1x.jpg",
+    poster2x: "/posters/onslaught-2x.jpg",
     team: {
       director: "Адам Вингард",
       cast: "Адриа Архона, Дэн Стивенс, Эрик Уэрхайм, Реджинальд ВелДжонсон, Майкл Бин, Алекс Перейра, Дрю Старки, Ребекка Холл",
@@ -191,8 +416,8 @@ export const ITEMS = [
     description:
       "1987 год. После неудачной разведывательной миссии над СССР американский пилот Трой Келли оказывается в руках бывшего офицера КГБ Николая Устинова. Чтобы выбраться из страны, неожиданным союзникам придётся скрываться от преследователей и научиться доверять друг другу.",
     palette: "orange",
-    poster:
-      "https://upload.wikimedia.org/wikipedia/en/0/01/Mayday_poster.jpg",
+    poster: "/posters/mayday-1x.jpg",
+    poster2x: "/posters/mayday-2x.jpg",
     team: {
       director: "Джон Фрэнсис Дейли, Джонатан Голдстейн",
       cast: "Райан Рейнольдс, Кеннет Брана, Марцин Дороциньский, Мария Бакалова, Дэвид Морс",
@@ -225,8 +450,8 @@ export const ITEMS = [
     description:
       "Криминальная история с экшеном и комедией ошибок: неожиданные повороты и неверные предположения раз за разом меняют ход событий. Главную роль исполняет Скотт Эдкинс.",
     palette: "gold",
-    poster:
-      "https://m.media-amazon.com/images/M/MV5BMTQ5ZDhhOTgtYzk1YS00NWVkLTg5ZjMtY2ZlZDU4MmNhMTUxXkEyXkFqcGc@._V1_.jpg",
+    poster: "/posters/reckless-1x.jpg",
+    poster2x: "/posters/reckless-2x.jpg",
     team: {
       director: "",
       cast: "Скотт Эдкинс, Винни Джонс",
@@ -254,8 +479,8 @@ export const ITEMS = [
     description:
       "Тяжело раненный Робин Гуд, всю жизнь промышлявший насилием, оказывается у загадочной женщины, которая предлагает ему последний шанс на спасение.",
     palette: "green",
-    poster:
-      "https://upload.wikimedia.org/wikipedia/en/6/6d/The_Death_of_Robin_Hood_poster.jpeg",
+    poster: "/posters/death-of-robin-hood-1x.jpg",
+    poster2x: "/posters/death-of-robin-hood-2x.jpg",
     team: {
       director: "Майкл Сарноски",
       cast: "Хью Джекман, Джоди Комер, Билл Скарсгард, Мюррей Бартлетт, Ноа Джуп",
@@ -290,8 +515,8 @@ export const ITEMS = [
     description:
       "Безработный бухгалтер Брайан отправляется на детскую прогулку с новым знакомым Джеффом, но обычное свидание семей быстро превращается в погоню от наёмников.",
     palette: "orange",
-    poster:
-      "https://upload.wikimedia.org/wikipedia/en/4/42/Playdate_%28film%29_poster.jpg",
+    poster: "/posters/uboynaya-subbota-1x.jpg",
+    poster2x: "/posters/uboynaya-subbota-2x.jpg",
     team: {
       director: "Люк Гринфилд",
       cast: "Кевин Джеймс, Алан Ричсон, Сара Чок, Алан Тьюдик, Бенджамин Паяк",
@@ -327,8 +552,8 @@ export const ITEMS = [
     description:
       "Агент ЦРУ Шон Уокер возвращается в родной город и встречается со старыми друзьями. Их принимают за похитителей ядерной боеголовки, и теперь компании нужно вернуть её и очистить свои имена.",
     palette: "gold",
-    poster:
-      "https://upload.wikimedia.org/wikipedia/en/8/89/Matchbox-_The_Movie_poster.jpg",
+    poster: "/posters/matchbox-1x.jpg",
+    poster2x: "/posters/matchbox-2x.jpg",
     team: {
       director: "Сэм Харгрейв",
       cast: "Джон Сина, Джессика Бил, Сэм Ричардсон, Артуро Кастро, Теона Паррис",
@@ -364,8 +589,8 @@ export const ITEMS = [
     description:
       "Молодая женщина, способная общаться с духами и переносить их в мир живых, становится мишенью зловещих сил.",
     palette: "violet",
-    poster:
-      "https://upload.wikimedia.org/wikipedia/en/5/5c/Insidious-out-of-the-further-poster.png",
+    poster: "/posters/astral-6-1x.jpg",
+    poster2x: "/posters/astral-6-2x.jpg",
     team: {
       director: "Джейкоб Чейз",
       cast: "Амелия Ив, Брэндон Переа, Мэйзи Ричардсон-Селлерс, Лин Шэй",
@@ -400,8 +625,8 @@ export const ITEMS = [
     description:
       "Вуди, Базз и Джесси сталкиваются с новым испытанием: любимицей Бонни становится Лилипад — умный планшет, который меняет привычный мир игрушек и их представление об игре.",
     palette: "gold",
-    poster:
-      "https://lumiere-a.akamaihd.net/v1/images/p_movies_toystory5_nowstreamingdisneyplus_poster_v1_93556266.jpeg?region=0%2C0%2C540%2C810",
+    poster: "/posters/toy-story-5-1x.jpg",
+    poster2x: "/posters/toy-story-5-2x.jpg",
     team: {
       director: "Эндрю Стэнтон",
       cast: "Том Хэнкс, Тим Аллен, Джоан Кьюсак, Грета Ли, Конан О’Брайен, Крэйг Робинсон",
@@ -438,8 +663,8 @@ export const ITEMS = [
     description:
       "Щенки терпят крушение на таинственном острове динозавров и знакомятся с Рексом. Когда планы мэра Хамдингера вызывают извержение вулкана, команде предстоит спасти остров.",
     palette: "green",
-    poster:
-      "https://image.tmdb.org/t/p/w780/cxXSF4aY5N2cOGwaga5OnpPFHzk.jpg",
+    poster: "/posters/paw-patrol-dino-movie-1x.jpg",
+    poster2x: "/posters/paw-patrol-dino-movie-2x.jpg",
     team: {
       director: "",
       cast: "",
@@ -474,8 +699,8 @@ export const ITEMS = [
     description:
       "Звёзды кей-попа Руми, Мира и Зои ведут двойную жизнь: выступают на сцене и защищают поклонников от демонов. Их главным испытанием становится бойз-бенд, участники которого скрывают свою демоническую сущность.",
     palette: "pink",
-    poster:
-      "https://image.tmdb.org/t/p/w780/zT7Lhw3BhJbMkRqm9Zlx2YGMsY0.jpg",
+    poster: "/posters/kpop-demon-hunters-1x.jpg",
+    poster2x: "/posters/kpop-demon-hunters-2x.jpg",
     team: {
       director: "Мэгги Кан, Крис Аппельханс",
       cast: "Арден Чо, Мэй Хон, Джиён Ю, Ан Хё-соп, Юнджин Ким, Джоэл Ким Бустер, Лиза Коши, Дэниэл Дэ Ким, Кен Жон, Ли Бён-хон",
@@ -509,8 +734,8 @@ export const ITEMS = [
     description:
       "Спанч Боб хочет доказать мистеру Крабсу, что он уже взрослый и смелый. Ради этого он отправляется за Летучим Голландцем в большое морское приключение.",
     palette: "blue",
-    poster:
-      "https://public-website-assets.paramountpictures.com/paramount2025/styles/hero_full/s3/2025-08/hero3.jpg?itok=F_UbCHMZ",
+    poster: "/posters/spongebob-search-squarepants-1x.jpg",
+    poster2x: "/posters/spongebob-search-squarepants-2x.jpg",
     team: {
       director: "Дерек Драймон",
       cast: "Том Кенни, Клэнси Браун, Роджер Бампасс, Билл Фагербакки, Кэролин Лоуренс, Мистер Лоуренс, Джордж Лопес, Айс Спайс, Артуро Кастро, Шерри Кола, Реджина Холл, Марк Хэмилл",
@@ -547,8 +772,8 @@ export const ITEMS = [
     description:
       "Любительница животных Мейбл переносит своё сознание в робота-бобра и учится общаться с животными. Чтобы защитить их дом от человеческой угрозы, ей придётся объединить всё животное царство.",
     palette: "green",
-    poster:
-      "https://image.tmdb.org/t/p/w780/xjtWQ2CL1mpmMNwuU5HeS4Iuwuu.jpg",
+    poster: "/posters/hoppers-1x.jpg",
+    poster2x: "/posters/hoppers-2x.jpg",
     team: {
       director: "Дэниэл Чонг",
       cast: "Пайпер Курда, Бобби Мойнихэн, Джон Хэмм, Кэти Наджими, Дэйв Франко",
@@ -583,8 +808,8 @@ export const ITEMS = [
     description:
       "Новое анимационное приключение Марио и его друзей во вселенной Super Mario — продолжение фильма «Братья Супер Марио в кино».",
     palette: "blue",
-    poster:
-      "https://www.universalpictures.com/assets/c59b11d7-111f-45c8-9d4e-70c6c9b8dcab.webp",
+    poster: "/posters/super-mario-galaxy-movie-1x.jpg",
+    poster2x: "/posters/super-mario-galaxy-movie-2x.jpg",
     team: {
       director: "Аарон Хорват, Майкл Джелениц",
       cast: "Крис Пратт, Аня Тейлор-Джой, Чарли Дэй, Джек Блэк, Киган-Майкл Ки, Бенни Сэфди, Дональд Гловер, Исса Рэй, Луис Гусман, Кевин Майкл Ричардсон, Бри Ларсон",
@@ -618,8 +843,8 @@ export const ITEMS = [
     description:
       "История связана с миром Hero Inside, где герои появляются из комиксов. Официальный синопсис именно полнометражного фильма «Сила воображения» пока не удалось подтвердить.",
     palette: "violet",
-    poster:
-      "https://image.tmdb.org/t/p/w780/c1mfsR4A7vOuYsrIETeFgxp1ZAf.jpg",
+    poster: "/posters/hero-inside-imagination-1x.jpg",
+    poster2x: "/posters/hero-inside-imagination-2x.jpg",
     team: {
       director: "",
       cast: "",
@@ -665,8 +890,8 @@ export const ITEMS = [
       synopsis:
         "Олли, маленький обитатель лесной долины, и Айви, птица из соседнего племени, случайно меняются телами с помощью волшебного плода. Чтобы вернуть всё как было, им приходится вместе пересечь незнакомые места и научиться понимать друг друга. Их путешествие раскрывает давнюю историю долины и приводит к угрозе, опасной для всех её жителей.",
     },
-    poster:
-      "https://image.tmdb.org/t/p/w780/tHhxWxge06goXU6ZQH1hj7vK8Hd.jpg",
+    poster: "/posters/swapped-1x.jpg",
+    poster2x: "/posters/swapped-2x.jpg",
     links: {
       telegram: "",
       vk: "https://vkvideo.ru/video-242325248_456239079",
@@ -699,8 +924,8 @@ export const ITEMS = [
       synopsis:
         "В канун Рождества близнецы Альфи и Элиз получают от матери необычные часы, оставленные пропавшим на войне отцом. Часы приводят их в Страну Иногда — волшебный мир, где все четыре времени года сменяются за один день, а загадочный Собиратель желаний предлагает исполнить их мечты. В музыкальном путешествии близнецы учатся снова поддерживать друг друга и понимают, что семья и дружба важнее желаний.",
     },
-    poster:
-      "https://img.usheru.com/eyJidWNrZXQiOiJzdGF0aWMudXNoZXJ1LmNvbSIsImtleSI6ImltZy9jaGFubmVscy9rYWxlaWRvc2NvcGVob21lZW50ZXJ0YWlubWVudC51c2hlcnUuY29tL21vdmllLWN1c3RvbS90aGUtbGFuZC1vZi1zb21ldGltZXNfZDAyMzA0MDAtNjdjZi00YzYxLWJlZWUtOWQ0Nzg1Y2FjZDA3anBlZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJmaXQiOiJjb3ZlciJ9fX0=",
+    poster: "/posters/the-land-of-sometimes-1x.jpg",
+    poster2x: "/posters/the-land-of-sometimes-2x.jpg",
     links: {
       telegram: "",
       vk: "https://vkvideo.ru/video-242325248_456239078",
@@ -736,8 +961,8 @@ export const ITEMS = [
       synopsis:
         "Учёная Эрика возвращается в жизнь профессора Чудакова и угрожает раскрыть его секрет — дружбу с фиксиками. Она вызывает Чудакова на состязание изобретателей, и обе стороны собирают команды помощников. Фиксикам предстоит объединиться против кработов — роботов-крабов, созданных Эрикой, и защитить тайну маленьких друзей.",
     },
-    poster:
-      "https://upload.wikimedia.org/wikipedia/ru/2/28/%D0%9F%D0%BE%D1%81%D1%82%D0%B5%D1%80_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D0%B0_%C2%AB%D0%A4%D0%B8%D0%BA%D1%81%D0%B8%D0%BA%D0%B8_%D0%BF%D1%80%D0%BE%D1%82%D0%B8%D0%B2_%D0%BA%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BE%D0%B2%C2%BB.jpg",
+    poster: "/posters/fixies-vs-crabbots-1x.jpg",
+    poster2x: "/posters/fixies-vs-crabbots-2x.jpg",
     links: {
       telegram: "",
       vk: "https://vkvideo.ru/video-242325248_456239059",
@@ -758,8 +983,8 @@ export const ITEMS = [
     description:
       "После контакта с инопланетным веществом ДНК Зои смешивается с ДНК её экзотических питомцев. Люди начинают превращаться в животных, а животные — в людей, и всем приходится найти общий язык, чтобы спасти мир.",
     palette: "gold",
-    poster:
-      "https://image.tmdb.org/t/p/w780/8tMZOnlFUa6zxlEF84QfghXnjuD.jpg",
+    poster: "/posters/evolution-1x.jpg",
+    poster2x: "/posters/evolution-2x.jpg",
     team: {
       director: "Зайра Муньос Домингес, Хулио Сото Гурпиде",
       cast: "",
